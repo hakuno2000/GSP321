@@ -24,6 +24,11 @@ gcloud compute instances create bastion-host --zone=us-east1-b --machine-type=n1
 --network-interface subnet=griffin-prod-mgmt
 ```
 
+```
+gcloud compute firewall-rules create allow-tcp-dev --network=griffin-dev-vpc --allow=tcp:22 --source-ranges="0.0.0.0/0"
+gcloud compute firewall-rules create allow-tcp-prod --network=griffin-prod-vpc --allow=tcp:22 --source-ranges="0.0.0.0/0"
+```
+
 ## Task 4. Create and configure Cloud SQL Instance
 ```
 gcloud sql instances create griffin-dev-db --region=us-east1

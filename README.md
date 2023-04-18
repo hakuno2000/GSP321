@@ -13,8 +13,8 @@ gcloud compute networks subnets create griffin-dev-mgmt --network=griffin-dev-vp
 ## Task 2. Create production VPC manually
 ```
 gcloud compute networks create griffin-prod-vpc --subnet-mode=custom
-gcloud compute networks subnets create griffin-prod-wp --network=griffin-dev-vpc --region=us-east1 --range=192.168.48.0/20
-gcloud compute networks subnets create griffin-prod-mgmt --network=griffin-dev-vpc --region=us-east1 --range=192.168.64.0/20
+gcloud compute networks subnets create griffin-prod-wp --network=griffin-prod-vpc --region=us-east1 --range=192.168.48.0/20
+gcloud compute networks subnets create griffin-prod-mgmt --network=griffin-prod-vpc --region=us-east1 --range=192.168.64.0/20
 ```
 
 ## Task 3. Create bastion host
@@ -44,7 +44,7 @@ kubectl apply -f wp-env.yaml
 
 ```
 gcloud iam service-accounts keys create key.json \
-    --iam-account=cloud-sql-proxy@$GOOGLE_CLOUD_PROJECT.iam.gserviceaccount.com
+    --iam-account=cloud-sql-proxy@qwiklabs-gcp-02-11ea6d3b33f6.iam.gserviceaccount.com
 kubectl create secret generic cloudsql-instance-credentials \
     --from-file key.json
 ```

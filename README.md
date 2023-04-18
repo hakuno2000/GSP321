@@ -32,6 +32,14 @@ gcloud compute firewall-rules create allow-tcp-prod --network=griffin-prod-vpc -
 ## Task 4. Create and configure Cloud SQL Instance
 ```
 gcloud sql instances create griffin-dev-db --region=us-east1
+gcloud sql connect griffin-dev-db
+```
+
+```
+CREATE DATABASE wordpress;
+CREATE USER "wp_user"@"%" IDENTIFIED BY "stormwind_rules";
+GRANT ALL PRIVILEGES ON wordpress.* TO "wp_user"@"%";
+FLUSH PRIVILEGES;
 ```
 
 ## Task 5. Create Kubernetes cluster

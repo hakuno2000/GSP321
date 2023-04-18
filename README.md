@@ -20,8 +20,8 @@ gcloud compute networks subnets create griffin-prod-mgmt --network=griffin-prod-
 ## Task 3. Create bastion host
 ```
 gcloud compute instances create bastion-host --zone=us-east1-b --machine-type=n1-standard-1 \
---network-interface subnet=griffin-dev-mgmt \
---network-interface subnet=griffin-prod-mgmt
+    --network-interface subnet=griffin-dev-mgmt \
+    --network-interface subnet=griffin-prod-mgmt
 ```
 
 ```
@@ -44,14 +44,18 @@ FLUSH PRIVILEGES;
 
 ## Task 5. Create Kubernetes cluster
 ```
-gcloud container clusters create griffin-dev --subnetwork=griffin-dev-wp --zone=us-east1-b
+gcloud container clusters create griffin-dev \
+    --network griffin-dev-vpc --subnetwork=griffin-dev-wp \
+    --zone=us-east1-b --num-nodes=2 --machine-type=n1-standard-4
 gcloud container clusters get-credentials griffin-dev --zone=us-east1-b
 ```
 
 ## Task 6. Prepare the Kubernetes cluster
 ```
-gsutil cp gs://cloud-training/gsp321/wp-k8s .
-nano wp-env.yaml
+gsutil cp -r gs://cloud-training/gsp321/wp-k8s .
+cd wp-k8s
+sed -i s/username_goes_here/wp_user/g wp-env.yaml
+sed -i s/password_goes_here/stormwind_rules/g wp-env.yaml
 kubectl apply -f wp-env.yaml
 ```
 
@@ -64,7 +68,9 @@ kubectl create secret generic cloudsql-instance-credentials \
 
 ## Task 7. Create a WordPress deployment
 ```
-nano wp-deployment.yaml
+I=$(gcloud sql instances describe griffin-dev-db --format="value(connectionName)")
+sed -i s/YOUR_SQL_INSTANCE/$I/g wp-deployment.yaml
+kubectl apply -f wp-deployment.yaml
 kubectl apply -f wp-service.yaml
 ```
 
